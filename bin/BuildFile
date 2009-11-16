@@ -1,0 +1,4 @@
+<bin name=TestSiStripGain file=TestSiStripGain.cc>
+  <use name=CalibFormats/SiStripObjects>
+</bin>
+
