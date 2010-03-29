@@ -6,24 +6,22 @@
 #include <vector>
 #include <sstream>
 
-using namespace std;
-
 int test( const bool testBool )
 {
   if( testBool ) {
-    cout << "--- Test PASSED ---" << endl;
-    cout << endl;
+    std::cout << "--- Test PASSED ---" << std::endl;
+    std::cout << std::endl;
     return 0;
   }
-  cout << "--- Test FAILED ---" << endl;
-  cout << endl;
+  std::cout << "--- Test FAILED ---" << std::endl;
+  std::cout << std::endl;
   return 1;
 }
 
 // The encoding probably causes loss of accuracy in the saved number which
 // is way low in the bits. The number shown by a cout is the same, but comparing
 // directly the two doubles we see they are not equal. For this reason, and for
-// the purpose of testing, multiply them by 1000 and conver them to int before
+// the purpose of testing, multiply them by 1000 and convert them to int before
 // comparing them.
 
 bool compare(const double & value1, const double & value2)
@@ -39,13 +37,13 @@ int main()
   double inputValue2 = 0.5;
 
   // Prepare vector of gain values and corresponding range
-  vector<float> v;
+  std::vector<float> v;
   v.push_back(inputValue1);
   v.push_back(inputValue2);
   SiStripApvGain::Range range1 = make_pair(v.begin(), v.begin()+1);      
   SiStripApvGain::Range range2 = make_pair(v.begin()+1, v.end());      
 
-  cout << "Testing the SiStripGain object with a single apvGain" << endl;
+  std::cout << "Testing the SiStripGain object with a single apvGain" << std::endl;
 
   SiStripApvGain apvGain1;
   // DetId and range
@@ -53,23 +51,23 @@ int main()
   apvGain1.put(101, range2);
   SiStripGain gain(apvGain1, 1.);
 
-  cout << "After inserting a single gain:" << endl;
-  stringstream ss;
+  std::cout << "After inserting a single gain:" << std::endl;
+  std::stringstream ss;
   gain.printDebug(ss);
-  cout << ss.str() << endl;
+  std::cout << ss.str() << std::endl;
 
   double gainValue = gain.getApvGain(0, range1);
-  cout << "Input value = " << inputValue1 << "; gain value = " << gainValue << endl;
-  // cout << "gainValue("<<gainValue<<") == inputValue1("<<inputValue1<<") = " << compare(inputValue1, gainValue) << endl;
+  std::cout << "Input value = " << inputValue1 << "; gain value = " << gainValue << std::endl;
+  // std::cout << "gainValue("<<gainValue<<") == inputValue1("<<inputValue1<<") = " << compare(inputValue1, gainValue) << std::endl;
   failedTests += test( compare(inputValue1, gainValue) );
   gainValue = gain.getApvGain(0, range2);
-  cout << "Input value = " << inputValue2 << "; gain value = " << gainValue << endl;
-  // cout << "gainValue("<<gainValue<<") == inputValue2("<<inputValue2<<") = " << compare(inputValue2, gainValue) << endl;
+  std::cout << "Input value = " << inputValue2 << "; gain value = " << gainValue << std::endl;
+  // std::cout << "gainValue("<<gainValue<<") == inputValue2("<<inputValue2<<") = " << compare(inputValue2, gainValue) << std::endl;
   failedTests += test( compare(inputValue2, gainValue) );
 
   // Adding a second gain
   // --------------------
-  vector<float> v2;
+  std::vector<float> v2;
   v2.push_back(inputValue2);
   v2.push_back(inputValue1);
   SiStripApvGain::Range range21 = make_pair(v2.begin(), v2.begin()+1);      
@@ -82,22 +80,22 @@ int main()
 
   gain.multiply(apvGain2, 1.);
 
-  cout << "After inserting a second gain:" << endl;
+  std::cout << "After inserting a second gain:" << std::endl;
   ss.str("");
   gain.printDebug(ss);
-  cout << ss.str() << endl;
+  std::cout << ss.str() << std::endl;
 
-  vector<SiStripApvGain::Range> rangeVector1 = gain.getAllRanges(100);
+  std::vector<SiStripApvGain::Range> rangeVector1 = gain.getAllRanges(100);
   gainValue = gain.getApvGain(0, rangeVector1);
-  cout << "Input values = " << inputValue1 << ", " << inputValue2 << "; gain value = " << gainValue << endl;
+  std::cout << "Input values = " << inputValue1 << ", " << inputValue2 << "; gain value = " << gainValue << std::endl;
   failedTests += test( compare(inputValue1*inputValue2, gainValue) );
   // SiStripApvGain::Range rangeToInspect2 = gain.getRange(101);
-  vector<SiStripApvGain::Range> rangeVector2 = gain.getAllRanges(101);
+  std::vector<SiStripApvGain::Range> rangeVector2 = gain.getAllRanges(101);
   gainValue = gain.getApvGain(0, rangeVector1);
-  cout << "Input values = " << inputValue2 << ", " << inputValue1 << "; gain value = " << gainValue << endl;
+  std::cout << "Input values = " << inputValue2 << ", " << inputValue1 << "; gain value = " << gainValue << std::endl;
   failedTests += test( compare(inputValue2*inputValue1, gainValue) );
 
-  cout << "Failed tests = " << failedTests << endl;
+  std::cout << "Failed tests = " << failedTests << std::endl;
 
   return 0;
 }
